@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1>Manage Items</h1>
+
+<form method="post">
+    {{ form.hidden_tag() }}
+    {{ form.name.label }}: {{ form.name() }}<br>
+    {{ form.price.label }}: {{ form.price() }}<br>
+    {{ form.submit() }}
+</form>
+
+{% for item, price in data.items() %}
+<div>
+    <span>{{ item }} - €{{ price }}</span>
+    <form method="post" action="{{ url_for('delete', item=item) }}">
+        <button type="submit">Delete</button>
+    </form>
+</div>
+{% endfor %}
+{% endblock %}

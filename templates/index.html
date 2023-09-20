@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repair Price Tracker</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+        .box {
+            border: 1px solid white;
+            padding: 10px;
+        }
+    </style>
+    <script>
+        function calculatePrice() {
+    let total = 0;
+    document.querySelectorAll('.item-count').forEach(function (input) {
+        total += parseInt(input.value) * parseFloat(input.dataset.price);
+    });
+    document.querySelector('#totalPrice').innerText = total.toFixed(2) + '€';
+    document.querySelector('#hiddenTotalPrice').value = total.toFixed(2);  // Update hidden input value
+}
+
+    </script>
+</head>
+<body onload="calculatePrice()">
+
+<div class="box">
+    <h1>Repair price calculator, last updated 20.9.2023</h1>
+    <form method="post">
+        <input type="text" name="name" placeholder="Name of bike" required>
+
+        {% for item, price in items.items() %}
+            <div>
+                {{ item }}: 
+                <button type="button" onclick="document.querySelector('#count-{{ loop.index }}').value = Math.max(0, parseInt(document.querySelector('#count-{{ loop.index }}').value) - 1); calculatePrice()">-1</button>
+                <input type="text" class="item-count" id="count-{{ loop.index }}" name="{{ item }}" value="0" data-price="{{ price }}" onchange="calculatePrice()" size="2" maxlength="3">
+                <button type="button" onclick="document.querySelector('#count-{{ loop.index }}').value = Math.min(100, parseInt(document.querySelector('#count-{{ loop.index }}').value) + 1); calculatePrice()">+1</button>
+            </div>
+        {% endfor %}
+
+        <div>
+            Total Price: <span id="totalPrice"></span>
+            <input type="hidden" id="hiddenTotalPrice" name="totalPrice" value="">
+        </div>
+
+        <div>
+            <button type="submit" name="save">Save repair cost</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
